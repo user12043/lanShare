@@ -13,6 +13,17 @@
     </welcome-file-list>
 
     <!--Servlets-->
+    <!--Home page-->
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>ogr.user12043.lanShare.servlets.HomeServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/index</url-pattern>
+    </servlet-mapping>
+
     <!--FileServlet for file processes-->
     <servlet>
         <servlet-name>FileServlet</servlet-name>

@@ -16,4 +16,18 @@ public class Utils {
         Date date = new Date();
         return format.format(date);
     }
+
+    public static String buildHtml(String body) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("<html>\n");
+        builder.append("<head>");
+        builder.append("<meta charset=\"utf-8\">");
+        builder.append("</head>");
+        builder.append("<body>");
+        builder.append(body);
+        builder.append("</body>");
+        builder.append("</html>\n");
+
+        return builder.toString();
+    }
 }
