@@ -11,18 +11,28 @@ public class Properties {
     private static String userHome = System.getProperty("user.home");
 
     public static String appConfigDir() {
-        return userHome + "/.lanShare";
+        String path = userHome + "/.lanShare";
+
+        // Checking directory
+        File configDir = new File(path);
+        if (!configDir.exists()) {
+            if (!configDir.mkdir()) {
+                // If cannot crate the directory, using userHome instead.
+                System.err.println("Cannot create directory in user home. Files will be in home directory instead!");
+                return userHome;
+            }
+        }
+
+        return path;
+    }
+
+    // App's files location
+    public static String appFilesLocation() {
+        return appConfigDir() + "/files";
     }
 
     // Logging parameters
     public static String logFileLocation() {
-        File configDir = new File(appConfigDir());
-        if (!configDir.exists()) {
-            if (!configDir.mkdir()) {
-                System.err.println("Cannot create directory in user home. Log file will be in home directory instead!");
-                return userHome + "/lanShareLog.log";
-            }
-        }
         return appConfigDir() + "/lanShareLog.log";
     }
 }

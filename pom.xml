@@ -10,6 +10,7 @@
 
     <properties>
         <servlet-version>3.1.0</servlet-version>
+        <jetty-version>9.4.8.v20171121</jetty-version>
     </properties>
 
     <dependencies>
@@ -29,5 +30,47 @@
 
     <build>
         <finalName>lanShare</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty-version}</version>
+                <configuration>
+                    <!--Http configuration-->
+                    <httpConnector>
+                        <port>8181</port>
+                        <!--Listening host (0.0.0.0 for all)-->
+                        <host>127.0.0.1</host>
+                        <name>LanShare</name>
+                    </httpConnector>
+
+                    <!--Scan interval for file changes (0 to disable)-->
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+
+                    <!--Automatic reload (default "automatic")-->
+                    <reload>manual</reload>
+
+                    <!--Dump out the server structure-->
+                    <!--<dumpOnStart>false</dumpOnStart>-->
+                    <webApp>
+                        <!--context path after url (E.g localhost:8080/lanShare)-->
+                        <contextPath>/lanShare</contextPath>
+
+                        <!--web.xml file location-->
+                        <!--<descriptor>/src/main/webapp/WEB-INF/web.xml</descriptor>-->
+
+                        <!--additional web.xml-->
+                        <!--<overrideDescriptor>/src/main/webapp/WEB-INF/webOverride.xml</overrideDescriptor>-->
+
+                        <!--path to static resources-->
+                        <!--<baseResource>/src/main/webapp</baseResource>-->
+
+                        <!--Can use multiple resource directories to serve static content-->
+                        <!--<resourceBases>/staticFiles</resourceBases>-->
+                    </webApp>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>

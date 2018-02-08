@@ -18,24 +18,54 @@ public class Logger {
     private static Writer writer;
     private static String seperator = "\n=============================================================\n";
 
-    private static void write(String value) {
+    // To use one instance of writer
+    private static Writer getWriter() {
         try {
             if (writer == null) {
                 writer = new FileWriter(logFile, true);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            writer.append(value);
-            writer.flush();
+        return writer;
+    }
+
+    // Writing given string value to log file
+    private static void write(String value) {
+        try {
+            getWriter().append(value);
+            getWriter().flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Logging functions
     public static void info(String value) {
         write(Utils.getTimeAsString() + "[INFO]: " + value + seperator);
     }
 
     public static void error(String value) {
         write(Utils.getTimeAsString() + "[ERROR]: " + value + seperator);
+    }
+
+    // Same functions to can specify the target file
+    private static void write(String value, File targetFile) {
+        try {
+            FileWriter newWriter = new FileWriter(targetFile, true);
+            newWriter.append(value);
+            newWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void info(String value, File targetFile) {
+        write((Utils.getTimeAsString() + "[INFO]: " + value + seperator), targetFile);
+    }
+
+    public static void error(String value, File targetFile) {
+        write((Utils.getTimeAsString() + "[ERROR]: " + value + seperator), targetFile);
     }
 }
