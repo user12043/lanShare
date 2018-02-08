@@ -7,23 +7,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by user12043 on 2/7/18
+ * Created by user12043 on 2/8/18
  * part of project lanShare
  */
 
-public class ResourceServlet extends HttpServlet {
+public class ErrorServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     }
 

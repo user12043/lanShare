@@ -5,13 +5,50 @@
 <web-app>
     <display-name>Lan Share</display-name>
 
+    <!--Welcome files-->
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!--Servlets-->
+    <!--FileServlet for file processes-->
     <servlet>
-        <servlet-name>ResourceServlet</servlet-name>
-        <servlet-class>ogr.user12043.lanShare.servlets.ResourceServlet</servlet-class>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>ogr.user12043.lanShare.servlets.FileServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ResourceServlet</servlet-name>
-        <url-pattern>/getResource</url-pattern>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/file</url-pattern>
     </servlet-mapping>
+
+    <!--Error Servlet-->
+    <servlet>
+        <servlet-name>ErrorServlet</servlet-name>
+        <servlet-class>ogr.user12043.lanShare.servlets.ErrorServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ErrorServlet</servlet-name>
+        <url-pattern>/error</url-pattern>
+    </servlet-mapping>
+
+    <!--Filters-->
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--Error pages-->
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error</location>
+    </error-page>
 </web-app>
