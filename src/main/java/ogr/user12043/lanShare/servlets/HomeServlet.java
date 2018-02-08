@@ -29,8 +29,10 @@ public class HomeServlet extends HttpServlet {
             String[] files = file.list();
 
             builder.append("Files:\n<ul>\n");
-            for (String s : files) {
-                builder.append("<li><a href=\"file?fileName=" + s + "\">" + s + "</a></li>\n");
+            if (files != null) {
+                for (String s : files) {
+                    builder.append("<li><a href=\"file?fileName=").append(s).append("\">").append(s).append("</a></li>\n");
+                }
             }
             builder.append("</ul>\n");
             response.getWriter().print(Utils.buildHtml(builder.toString()));

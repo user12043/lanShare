@@ -16,7 +16,7 @@ import java.io.Writer;
 public class Logger {
     private static File logFile = new File(Properties.logFileLocation());
     private static Writer writer;
-    private static String seperator = "\n=============================================================\n";
+    private static String separator = "\n=============================================================\n";
 
     // To use one instance of writer
     private static Writer getWriter() {
@@ -43,11 +43,11 @@ public class Logger {
 
     // Logging functions
     public static void info(String value) {
-        write(Utils.getTimeAsString() + "[INFO]: " + value + seperator);
+        write(Utils.getTimeAsString() + "[INFO]: " + value + separator);
     }
 
     public static void error(String value) {
-        write(Utils.getTimeAsString() + "[ERROR]: " + value + seperator);
+        write(Utils.getTimeAsString() + "[ERROR]: " + value + separator);
     }
 
     // Same functions to can specify the target file
@@ -55,17 +55,17 @@ public class Logger {
         try {
             FileWriter newWriter = new FileWriter(targetFile, true);
             newWriter.append(value);
-            newWriter.close();
+            newWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void info(String value, File targetFile) {
-        write((Utils.getTimeAsString() + "[INFO]: " + value + seperator), targetFile);
+        write((Utils.getTimeAsString() + "[INFO]: " + value + separator), targetFile);
     }
 
     public static void error(String value, File targetFile) {
-        write((Utils.getTimeAsString() + "[ERROR]: " + value + seperator), targetFile);
+        write((Utils.getTimeAsString() + "[ERROR]: " + value + separator), targetFile);
     }
 }

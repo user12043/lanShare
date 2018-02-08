@@ -18,16 +18,14 @@ public class Utils {
     }
 
     public static String buildHtml(String body) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<html>\n");
-        builder.append("<head>");
-        builder.append("<meta charset=\"utf-8\">");
-        builder.append("</head>");
-        builder.append("<body>");
-        builder.append(body);
-        builder.append("</body>");
-        builder.append("</html>\n");
 
-        return builder.toString();
+        return "<html>\n" +
+                "<head>" +
+                "<meta charset=\"utf-8\">" +
+                "</head>" +
+                "<body>" +
+                body +
+                "</body>" +
+                "</html>\n";
     }
 }
