@@ -9,6 +9,10 @@
     <url>http://maven.apache.org</url>
 
     <properties>
+        <!--Describe compiler version-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <!--Custom properties-->
         <servlet-version>3.1.0</servlet-version>
         <jetty-version>9.4.8.v20171121</jetty-version>
     </properties>
@@ -46,10 +50,10 @@
                     </httpConnector>
 
                     <!--Scan interval for file changes (0 to disable)-->
-                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <scanIntervalSeconds>10</scanIntervalSeconds>
 
                     <!--Automatic reload (default "automatic")-->
-                    <reload>manual</reload>
+                    <reload>automatic</reload>
 
                     <!--Dump out the server structure-->
                     <!--<dumpOnStart>false</dumpOnStart>-->

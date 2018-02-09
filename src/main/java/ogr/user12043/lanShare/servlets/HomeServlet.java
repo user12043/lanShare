@@ -35,6 +35,18 @@ public class HomeServlet extends HttpServlet {
                 }
             }
             builder.append("</ul>\n");
+            builder.append("<br><br><br>\n");
+            builder.append("<form action=\"file\" method=\"post\" enctype=\"multipart/form-data\">\n");
+            builder.append("<table border=\"3\">\n");
+            builder.append("<tr>\n");
+            builder.append("<td><label for=\"upFile\">Select File: </label></td>\n");
+            builder.append("<td><input id=\"upFile\" name=\"upFile\" type=\"file\"></td>\n");
+            builder.append("</tr>\n");
+            builder.append("<tr style=\"text-align: center\">\n");
+            builder.append("<td colspan=\"2\"><input type=\"submit\" value=\"Submit\"></td>\n");
+            builder.append("</tr>\n");
+            builder.append("</table>\n");
+            builder.append("</form>\n");
             response.getWriter().print(Utils.buildHtml(builder.toString()));
         }
     }
