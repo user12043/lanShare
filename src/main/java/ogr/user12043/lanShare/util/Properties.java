@@ -8,31 +8,20 @@ import java.io.File;
  */
 
 public class Properties {
+    // User's home folder
     private static String userHome = System.getProperty("user.home");
 
     public static String appConfigDir() {
-        String path = userHome + "/.lanShare";
-
-        // Checking directory
-        File configDir = new File(path);
-        if (!configDir.exists()) {
-            if (!configDir.mkdir()) {
-                // If cannot crate the directory, using userHome instead.
-                System.err.println("Cannot create directory in user home. Files will be in home directory instead!");
-                return userHome;
-            }
-        }
-
-        return path;
+        return userHome + File.separator + ".lanShare";
     }
 
     // App's files location
     public static String appFilesLocation() {
-        return appConfigDir() + "/files";
+        return appConfigDir() + File.separator + "files";
     }
 
     // Logging parameters
     public static String logFileLocation() {
-        return appConfigDir() + "/lanShareLog.log";
+        return appConfigDir() + File.separator + "lanShare.log";
     }
 }

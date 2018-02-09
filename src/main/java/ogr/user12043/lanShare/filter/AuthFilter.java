@@ -1,6 +1,11 @@
 package ogr.user12043.lanShare.filter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
@@ -8,12 +13,12 @@ import java.io.IOException;
  * part of project lanShare
  */
 
-public class AuthFilter implements Filter {
+public class AuthFilter extends HttpFilter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // TODO: Add authentication here
         chain.doFilter(request, response);
     }

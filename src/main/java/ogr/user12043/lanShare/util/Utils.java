@@ -17,11 +17,12 @@ public class Utils {
         return format.format(date);
     }
 
+    // Build and html body and return
     public static String buildHtml(String body) {
 
         return "<html>\n" +
                 "<head>" +
-                "<meta charset=\"utf-8\">" +
+                "<meta charset=\"UTF-8\">" +
                 "</head>" +
                 "<body>" +
                 body +

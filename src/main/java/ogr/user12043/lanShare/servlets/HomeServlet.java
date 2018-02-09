@@ -26,8 +26,10 @@ public class HomeServlet extends HttpServlet {
         File file = new File(Properties.appFilesLocation());
         StringBuilder builder = new StringBuilder("");
         if (file.exists()) {
+            // Get list of files in the directory
             String[] files = file.list();
 
+            // Create and write html string into response
             builder.append("Files:\n<ul>\n");
             if (files != null) {
                 for (String s : files) {
@@ -49,11 +51,6 @@ public class HomeServlet extends HttpServlet {
             builder.append("</form>\n");
             response.getWriter().print(Utils.buildHtml(builder.toString()));
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
     }
 
     @Override

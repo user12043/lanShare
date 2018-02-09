@@ -38,7 +38,7 @@
     <!--Mappings-->
     <servlet-mapping>
         <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/index</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -63,3 +63,25 @@
         <location>/error</location>
     </error-page>
 </web-app>
+
+        <!--
+        NOTE:
+        If you get following error, (I get from Glassfish 4.1.1):
+        "The content of element type "web-app" must match "(icon?,display-name?,description?,distributable?,context-param*,filter*,filter-mapping*,listener*,servlet*,servlet-mapping*,session-config?,mime-mapping*,welcome-file-list?,error-page*,taglib*,resource-env-ref*,resource-ref*,security-constraint*,login-config?,security-role*,env-entry*,ejb-ref*,ejb-local-ref*)".."
+
+        you must order the content of this file according to given order in error.
+
+        E.g this is wrong:
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
+    </filter>
+
+
+        Because filter mapping comes before filter. (Even it can be mapping of another filter.)
+         -->

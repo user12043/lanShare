@@ -20,7 +20,6 @@ import java.nio.file.Paths;
  */
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024 * 100, location = "/")
-
 public class FileServlet extends HttpServlet {
     private byte[] buffer;
     private int read;
@@ -39,16 +38,17 @@ public class FileServlet extends HttpServlet {
 
         // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
         /*InputStream upFileStream = upFilePart.getInputStream();
-        File saveFile = new File(Properties.appFilesLocation() + "/" + upFileName);
+        File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
         OutputStream out = new FileOutputStream(saveFile);
         boolean fail = false;
 
         if (!saveFile.exists()) {
-
+            // Read from InputStream and write to the FileOutputStream
             while ((read = upFileStream.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
 
+            // Save the file
             if (saveFile.createNewFile()) {
                 response.sendRedirect("index");
             } else {
@@ -73,14 +73,19 @@ public class FileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get file name and create file object
         String fileName = request.getParameter("fileName");
         File file = new File(Properties.appFilesLocation() + File.separator + fileName);
+
+        // Check file state
         if (!fileName.isEmpty() && file.exists() && !file.isDirectory()) {
+            // Set header to tell browser file downloading
             response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
 
             OutputStream out = response.getOutputStream();
             FileInputStream inputStream = new FileInputStream(file);
 
+            // Write the file to response output
             while ((read = inputStream.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
