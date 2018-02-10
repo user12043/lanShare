@@ -1,5 +1,7 @@
 package ogr.user12043.lanShare.util;
 
+import ogr.user12043.lanShare.logging.Logger;
+
 import java.io.File;
 
 /**
@@ -12,12 +14,35 @@ public class Properties {
     private static String userHome = System.getProperty("user.home");
 
     public static String appConfigDir() {
-        return userHome + File.separator + ".lanShare";
+        String path = userHome + File.separator + ".lanShare";
+        File dir = new File(path);
+        if (!dir.exists() || !dir.isDirectory()) {
+            if (!dir.mkdir()) {
+                Logger.error("Cannot create default config directory");
+                return userHome;
+            }
+        }
+        return path;
     }
 
     // App's files location
     public static String appFilesLocation() {
-        return appConfigDir() + File.separator + "files";
+        String path = appConfigDir() + File.separator + "files";
+        File dir = new File(path);
+        if (!dir.exists() || !dir.isDirectory()) {
+            if (!dir.mkdir()) {
+                Logger.error("Cannot create default files directory");
+                String alPath = "files";
+                File alDir = new File(alPath);
+                if (!dir.exists()) {
+                    if (dir.mkdir()) {
+                        Logger.info("Alternate files directory created.");
+                        return alPath;
+                    }
+                }
+            }
+        }
+        return path;
     }
 
     // Logging parameters

@@ -38,7 +38,7 @@ public class FileServlet extends HttpServlet {
         try {
             Part upFilePart = request.getPart("upFile");
             String upFileName = Paths.get(upFilePart.getSubmittedFileName()).getFileName().toString();
-            Logger.info("Uploading file name: \"" + upFileName + "\", session id: \"" + request.getRequestedSessionId() + "\"");
+            Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
             // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
         /*InputStream upFileStream = upFilePart.getInputStream();
         File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
@@ -71,7 +71,7 @@ public class FileServlet extends HttpServlet {
 
             // Writing more simply
             try {
-                upFilePart.write(Properties.appFilesLocation() + File.separator + upFileName);
+                upFilePart.write(Properties.appFilesLocation() + File.separator + ((upFileName.isEmpty()) ? "unnamed" : upFileName));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -92,9 +92,11 @@ public class FileServlet extends HttpServlet {
 
             // Check file state
             if (!fileName.isEmpty() && file.exists() && !file.isDirectory()) {
-                Logger.info("Downloading file name: \"" + fileName + "\", session id: \"" + request.getRequestedSessionId() + "\"");
+                Logger.info("Downloading file name: \"" + fileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
                 // Set header to tell browser a file is downloading
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                // Set content length. Browser will know file size.
+                response.setContentLengthLong(file.length());
 
                 OutputStream out = response.getOutputStream();
                 FileInputStream inputStream = new FileInputStream(file);

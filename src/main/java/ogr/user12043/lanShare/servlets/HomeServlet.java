@@ -25,35 +25,38 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Logger.info("Home page, session id: \"" + request.getRequestedSessionId() + "\"");
+            Logger.info("Home page, Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
             File file = new File(Properties.appFilesLocation());
             StringBuilder builder = new StringBuilder("");
+            builder.append("Files:\n<ul>\n");
             if (file.exists()) {
                 // Get list of files in the directory
-                String[] files = file.list();
+                File[] files = file.listFiles();
 
                 // Create and write html string into response
-                builder.append("Files:\n<ul>\n");
                 if (files != null) {
-                    for (String s : files) {
-                        builder.append("<li><a href=\"file?fileName=").append(s).append("\">").append(s).append("</a></li>\n");
+                    for (File f : files) {
+                        if (f.isFile()) {
+                            String name = f.getName();
+                            builder.append("<li><a href=\"file?fileName=").append(name).append("\">").append(name).append("</a></li>\n");
+                        }
                     }
                 }
-                builder.append("</ul>\n");
-                builder.append("<br><br><br>\n");
-                builder.append("<form action=\"file\" method=\"post\" enctype=\"multipart/form-data\">\n");
-                builder.append("<table border=\"3\">\n");
-                builder.append("<tr>\n");
-                builder.append("<td><label for=\"upFile\">Select File: </label></td>\n");
-                builder.append("<td><input id=\"upFile\" name=\"upFile\" type=\"file\"></td>\n");
-                builder.append("</tr>\n");
-                builder.append("<tr style=\"text-align: center\">\n");
-                builder.append("<td colspan=\"2\"><input type=\"submit\" value=\"Submit\"></td>\n");
-                builder.append("</tr>\n");
-                builder.append("</table>\n");
-                builder.append("</form>\n");
-                response.getWriter().print(Utils.buildHtml(builder.toString()));
             }
+            builder.append("</ul>\n");
+            builder.append("<br><br><br>\n");
+            builder.append("<form action=\"file\" method=\"post\" enctype=\"multipart/form-data\">\n");
+            builder.append("<table border=\"3\">\n");
+            builder.append("<tr>\n");
+            builder.append("<td><label for=\"upFile\">Select File: </label></td>\n");
+            builder.append("<td><input id=\"upFile\" name=\"upFile\" type=\"file\"></td>\n");
+            builder.append("</tr>\n");
+            builder.append("<tr style=\"text-align: center\">\n");
+            builder.append("<td colspan=\"2\"><input type=\"submit\" value=\"Submit\"></td>\n");
+            builder.append("</tr>\n");
+            builder.append("</table>\n");
+            builder.append("</form>\n");
+            response.getWriter().print(Utils.buildHtml(builder.toString()));
         } catch (IOException e) {
             Logger.error(e.getMessage());
         }
