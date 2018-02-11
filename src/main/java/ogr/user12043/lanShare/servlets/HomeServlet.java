@@ -38,14 +38,14 @@ public class HomeServlet extends HttpServlet {
                     for (File f : files) {
                         if (f.isFile()) {
                             String name = f.getName();
-                            builder.append("<li><a href=\"file?fileName=").append(name).append("\">").append(name).append("</a></li>\n");
+                            builder.append("<li><a href=\"").append(request.getContextPath()).append("/file?fileName=").append(name).append("\">").append(name).append("</a></li>\n");
                         }
                     }
                 }
             }
             builder.append("</ul>\n");
             builder.append("<br><br><br>\n");
-            builder.append("<form action=\"file\" method=\"post\" enctype=\"multipart/form-data\">\n");
+            builder.append("<form action=\"").append(request.getContextPath()).append("/file\" method=\"post\" enctype=\"multipart/form-data\">\n");
             builder.append("<table border=\"3\">\n");
             builder.append("<tr>\n");
             builder.append("<td><label for=\"upFile\">Select File: </label></td>\n");

@@ -2,16 +2,14 @@ package ogr.user12043.lanShare.servlets;
 
 import ogr.user12043.lanShare.logging.Logger;
 import ogr.user12043.lanShare.util.Properties;
+import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Paths;
 
 //import javax.servlet.annotation.MultipartConfig;
@@ -40,42 +38,36 @@ public class FileServlet extends HttpServlet {
             String upFileName = Paths.get(upFilePart.getSubmittedFileName()).getFileName().toString();
             Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
             // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
-        /*InputStream upFileStream = upFilePart.getInputStream();
-        File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
-        OutputStream out = new FileOutputStream(saveFile);
-        boolean fail = false;
+            InputStream upFileStream = upFilePart.getInputStream();
+            File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
+            boolean success = false;
+            OutputStream out = null;
 
-        if (!saveFile.exists()) {
-            // Read from InputStream and write to the FileOutputStream
-            while ((read = upFileStream.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
+            if (!saveFile.exists()) {
+                out = new FileOutputStream(saveFile);
+                // Read from InputStream and write to the FileOutputStream
+                while ((read = upFileStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                response.sendRedirect(request.getContextPath());
+                success = true;
+            }
+            upFileStream.close();
+            if (out != null) {
+                out.close();
             }
 
-            // Save the file
-            if (saveFile.createNewFile()) {
-                response.sendRedirect("index");
-            } else {
-                fail = true;
+            if (success) {
+                return;
             }
-        } else {
-            fail = true;
-        }
 
-        if (fail) {
             response.getWriter().print(Utils.buildHtml("<h1 style=\"color:red\">FAILED</h1>\n" +
-                    "<a href=\"index\">Back to home...</a>"));
-        }
-        upFileStream.close();
-        out.close();*/
+                    "<a href=\"" + request.getContextPath() + "\">Back to home...</a>"));
             // </editor-fold>
 
-            // Writing more simply
-            try {
-                upFilePart.write(Properties.appFilesLocation() + File.separator + ((upFileName.isEmpty()) ? "unnamed" : upFileName));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            response.sendRedirect("index");
+            /*// Writing more simply (Not working now)
+            // TODO; Make working
+            upFilePart.write(Properties.appFilesLocation() + File.separator + ((upFileName.isEmpty()) ? "unnamed" : upFileName));*/
         } catch (IOException e) {
             Logger.error(e.getMessage());
         } catch (ServletException e) {

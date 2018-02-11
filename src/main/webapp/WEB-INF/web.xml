@@ -31,13 +31,13 @@ If version number here is less then 3.0, Glassfish server will give error while 
         <servlet-name>FileServlet</servlet-name>
         <servlet-class>ogr.user12043.lanShare.servlets.FileServlet</servlet-class>
         <multipart-config>
-            <location>/</location>
+            <!--<location>/</location>-->
             <!--4 GB upload limit-->
             <max-file-size>4294967296</max-file-size>
             <!--4 GB download limit-->
             <max-request-size>4294967296</max-request-size>
-            <!--10MB+ will write directly to disk-->
-            <file-size-threshold>10485760</file-size-threshold>
+            <!--300MB+ files will write directly to disk-->
+            <file-size-threshold>314572800</file-size-threshold>
         </multipart-config>
     </servlet>
 
