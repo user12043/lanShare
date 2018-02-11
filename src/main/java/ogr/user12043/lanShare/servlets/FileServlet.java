@@ -2,24 +2,27 @@ package ogr.user12043.lanShare.servlets;
 
 import ogr.user12043.lanShare.logging.Logger;
 import ogr.user12043.lanShare.util.Properties;
-import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Paths;
-
-//import javax.servlet.annotation.MultipartConfig;
 
 /**
  * Created by user12043 on 2/7/18
  * part of project lanShare
  */
 
-//@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024 * 100, location = "/")
+@WebServlet(urlPatterns = "/file")
+@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L, fileSizeThreshold = 0)
 public class FileServlet extends HttpServlet {
     private byte[] buffer;
     private int read;
@@ -38,7 +41,7 @@ public class FileServlet extends HttpServlet {
             String upFileName = Paths.get(upFilePart.getSubmittedFileName()).getFileName().toString();
             Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
             // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
-            InputStream upFileStream = upFilePart.getInputStream();
+            /*InputStream upFileStream = upFilePart.getInputStream();
             File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
             boolean success = false;
             OutputStream out = null;
@@ -62,12 +65,14 @@ public class FileServlet extends HttpServlet {
             }
 
             response.getWriter().print(Utils.buildHtml("<h1 style=\"color:red\">FAILED</h1>\n" +
-                    "<a href=\"" + request.getContextPath() + "\">Back to home...</a>"));
+                    "<a href=\"" + request.getContextPath() + "\">Back to home...</a>"));*/
             // </editor-fold>
 
-            /*// Writing more simply (Not working now)
-            // TODO; Make working
-            upFilePart.write(Properties.appFilesLocation() + File.separator + ((upFileName.isEmpty()) ? "unnamed" : upFileName));*/
+            //<editor-fold desc="Writing more simply">
+            // Not working in Glassfish-5.0 (January 2018 now) because does not support absolute path in this case.
+            // Also in Jetty-9.4.8.v20171121
+            upFilePart.write(Properties.appFilesLocation() + File.separator + upFileName);
+            //</editor-fold>
         } catch (IOException e) {
             Logger.error(e.getMessage());
         } catch (ServletException e) {

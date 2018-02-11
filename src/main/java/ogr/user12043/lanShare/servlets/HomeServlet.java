@@ -5,6 +5,7 @@ import ogr.user12043.lanShare.util.Properties;
 import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.io.IOException;
  * part of project lanShare
  */
 
+@WebServlet(urlPatterns = {"/"})
 public class HomeServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {

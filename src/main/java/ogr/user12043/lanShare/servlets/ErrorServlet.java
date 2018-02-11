@@ -1,6 +1,7 @@
 package ogr.user12043.lanShare.servlets;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import java.io.IOException;
  * part of project lanShare
  */
 
+@WebServlet(urlPatterns = {"/error"})
 public class ErrorServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
