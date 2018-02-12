@@ -1,2 +1,9 @@
+# IDE files
 .idea
+.settings
+.classpath
+.project
 *.iml
+
+# Output dir
+target

@@ -2,6 +2,7 @@ package ogr.user12043.lanShare.servlets;
 
 import ogr.user12043.lanShare.logging.Logger;
 import ogr.user12043.lanShare.util.Properties;
+import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -10,10 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Paths;
 
 /**
@@ -22,7 +20,7 @@ import java.nio.file.Paths;
  */
 
 @WebServlet(urlPatterns = "/file")
-@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L, fileSizeThreshold = 0)
+@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L)
 public class FileServlet extends HttpServlet {
     private byte[] buffer;
     private int read;
@@ -40,43 +38,37 @@ public class FileServlet extends HttpServlet {
             Part upFilePart = request.getPart("upFile");
             String upFileName = Paths.get(upFilePart.getSubmittedFileName()).getFileName().toString();
             Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
+
             // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
-            /*InputStream upFileStream = upFilePart.getInputStream();
+            InputStream upFileStream = upFilePart.getInputStream();
             File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
-            boolean success = false;
-            OutputStream out = null;
 
             if (!saveFile.exists()) {
-                out = new FileOutputStream(saveFile);
+                OutputStream out = new FileOutputStream(saveFile);
                 // Read from InputStream and write to the FileOutputStream
                 while ((read = upFileStream.read(buffer)) != -1) {
                     out.write(buffer, 0, read);
                 }
+                out.close();
+                // Redirect to home
                 response.sendRedirect(request.getContextPath());
-                success = true;
+            } else {
+                // Send conflict error
+                response.sendError(409);
             }
             upFileStream.close();
-            if (out != null) {
-                out.close();
-            }
-
-            if (success) {
-                return;
-            }
-
-            response.getWriter().print(Utils.buildHtml("<h1 style=\"color:red\">FAILED</h1>\n" +
-                    "<a href=\"" + request.getContextPath() + "\">Back to home...</a>"));*/
             // </editor-fold>
 
-            //<editor-fold desc="Writing more simply">
+            //<editor-fold desc="Writing more simply" defaultstate="collapsed">
             // Not working in Glassfish-5.0 (January 2018 now) because does not support absolute path in this case.
             // Also in Jetty-9.4.8.v20171121
-            upFilePart.write(Properties.appFilesLocation() + File.separator + upFileName);
+            //upFilePart.write(Properties.appFilesLocation() + File.separator + upFileName);
             //</editor-fold>
-        } catch (IOException e) {
-            Logger.error(e.getMessage());
-        } catch (ServletException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            Logger.error(errorMessage);
+            // Send internal server error
+            response.sendError(500, errorMessage);
         }
     }
 
@@ -91,7 +83,14 @@ public class FileServlet extends HttpServlet {
             if (!fileName.isEmpty() && file.exists() && !file.isDirectory()) {
                 Logger.info("Downloading file name: \"" + fileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
                 // Set header to tell browser a file is downloading
-                response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                response.setContentType("application/octet-stream");
+
+                // Not setting file name directly because there is any special character in it maybe.
+                // Set encoding depending on the browser
+                boolean isIE = (request.getHeader("user-agent").contains("MSIE"));
+                String sendName = Utils.fixSpecialCharactersInFileName(fileName, isIE);
+                response.setHeader("content-disposition", "attachment; filename=\"" + sendName + "\"");
+
                 // Set content length. Browser will know file size.
                 response.setContentLengthLong(file.length());
 
@@ -106,10 +105,14 @@ public class FileServlet extends HttpServlet {
                 inputStream.close();
                 out.flush();
             } else {
-                response.setStatus(404);
+                // Send not found error
+                response.sendError(404);
             }
-        } catch (IOException e) {
-            Logger.error(e.getMessage());
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            Logger.error(errorMessage);
+            // Send internal server error
+            response.sendError(500, errorMessage);
         }
     }
 

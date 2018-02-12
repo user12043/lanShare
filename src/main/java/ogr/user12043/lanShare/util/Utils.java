@@ -1,5 +1,6 @@
 package ogr.user12043.lanShare.util;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,5 +29,15 @@ public class Utils {
                 body +
                 "</body>" +
                 "</html>\n";
+    }
+
+    // Encode given string for special characters in downloading file names
+    public static String fixSpecialCharactersInFileName(String fileName, boolean isIE) throws UnsupportedEncodingException {
+        byte[] nameBytes = fileName.getBytes((isIE) ? "WINDOWS-1250" : "UTF-8");
+        StringBuilder sendName = new StringBuilder();
+        for (byte b : nameBytes) {
+            sendName.append((char) (b & 0xff));
+        }
+        return sendName.toString();
     }
 }

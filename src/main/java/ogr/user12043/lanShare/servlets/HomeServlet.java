@@ -2,7 +2,6 @@ package ogr.user12043.lanShare.servlets;
 
 import ogr.user12043.lanShare.logging.Logger;
 import ogr.user12043.lanShare.util.Properties;
-import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,12 +29,13 @@ public class HomeServlet extends HttpServlet {
             Logger.info("Home page, Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
             File file = new File(Properties.appFilesLocation());
             StringBuilder builder = new StringBuilder("");
-            builder.append("Files:\n<ul>\n");
+//            builder.append("Files:\n<ul>\n");
             if (file.exists()) {
                 // Get list of files in the directory
                 File[] files = file.listFiles();
+                request.setAttribute("files", files);
 
-                // Create and write html string into response
+                /*// Create and write html string into response
                 if (files != null) {
                     for (File f : files) {
                         if (f.isFile()) {
@@ -43,9 +43,9 @@ public class HomeServlet extends HttpServlet {
                             builder.append("<li><a href=\"").append(request.getContextPath()).append("/file?fileName=").append(name).append("\">").append(name).append("</a></li>\n");
                         }
                     }
-                }
+                }*/
             }
-            builder.append("</ul>\n");
+            /*builder.append("</ul>\n");
             builder.append("<br><br><br>\n");
             builder.append("<form action=\"").append(request.getContextPath()).append("/file\" method=\"post\" enctype=\"multipart/form-data\">\n");
             builder.append("<table border=\"3\">\n");
@@ -58,9 +58,13 @@ public class HomeServlet extends HttpServlet {
             builder.append("</tr>\n");
             builder.append("</table>\n");
             builder.append("</form>\n");
-            response.getWriter().print(Utils.buildHtml(builder.toString()));
-        } catch (IOException e) {
-            Logger.error(e.getMessage());
+            response.getWriter().print(Utils.buildHtml(builder.toString()));*/
+            request.getRequestDispatcher("pages/mainPage.jsp").forward(request, response);
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            Logger.error(errorMessage);
+            // Send internal server error
+            response.sendError(500, errorMessage);
         }
     }
 

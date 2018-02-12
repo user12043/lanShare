@@ -8,6 +8,7 @@ If version number here is less then 3.0, Glassfish server will give error while 
          version="3.0">
     <display-name>Lan Share</display-name>
 
+
     <!--XML of annotations in classes-->
 
     <!--Filters-->
@@ -67,6 +68,7 @@ If version number here is less then 3.0, Glassfish server will give error while 
 
     <!--Welcome files-->
     <welcome-file-list>
+        <welcome-file>pages/mainPage.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
