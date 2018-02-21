@@ -20,7 +20,7 @@ Files:
     <table border="3">
         <tr>
             <td><label for="upFile">Select File: </label></td>
-            <td><input id="upFile" name="upFile" type="file"></td>
+            <td><input id="upFile" name="upFile" type="file" multiple="multiple"></td>
         </tr>
         <tr style="text-align: center">
             <td colspan="2"><input type="submit" value="Submit"></td>

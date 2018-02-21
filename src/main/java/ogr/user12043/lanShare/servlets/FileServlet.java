@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import javax.swing.*;
 import java.io.*;
 import java.nio.file.Paths;
 
@@ -35,30 +36,32 @@ public class FileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Part upFilePart = request.getPart("upFile");
-            String upFileName = Paths.get(upFilePart.getSubmittedFileName()).getFileName().toString();
-            Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
+            for (Part part : request.getParts()) {
+                JOptionPane.showMessageDialog(null, part.getSubmittedFileName());
+                String upFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
 
-            // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
-            InputStream upFileStream = upFilePart.getInputStream();
-            File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
+                // <editor-fold desc="Write manually from InputStream" defaultstate="collapsed">
+                InputStream upFileStream = part.getInputStream();
+                File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
 
-            if (!saveFile.exists()) {
-                OutputStream out = new FileOutputStream(saveFile);
-                // Read from InputStream and write to the FileOutputStream
-                while ((read = upFileStream.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
+                if (!saveFile.exists()) {
+                    OutputStream out = new FileOutputStream(saveFile);
+                    // Read from InputStream and write to the FileOutputStream
+                    while ((read = upFileStream.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    out.close();
+                } else if (part.getSize() == 0) {
+                    response.sendError(400, "The file part can not empty");
+                } else {
+                    // Send conflict error
+                    response.sendError(409);
                 }
-                out.close();
-                // Redirect to home
-                response.sendRedirect(request.getContextPath());
-            } else if (upFilePart.getSize() == 0) {
-                response.sendError(400, "The file part can not empty");
-            } else {
-                // Send conflict error
-                response.sendError(409);
+                upFileStream.close();
             }
-            upFileStream.close();
+            // Redirect to home
+            response.sendRedirect(request.getContextPath());
             // </editor-fold>
 
             //<editor-fold desc="Writing more simply" defaultstate="collapsed">
