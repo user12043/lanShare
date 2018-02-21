@@ -3,7 +3,6 @@
 <html>
 <head>
     <title>Lan Share</title>
-    <script src="../assets/js/scripts.js"></script>
 </head>
 <body>
 Files:
@@ -16,7 +15,8 @@ Files:
     <%}%>
 </ul>
 <br><br><br>
-<form action="${pageContext.request.contextPath}/file" method="post" enctype="multipart/form-data">
+<form action="${pageContext.request.contextPath}/file" method="post" enctype="multipart/form-data"
+      onsubmit="return validateForm()">
     <table border="3">
         <tr>
             <td><label for="upFile">Select File: </label></td>
@@ -27,5 +27,6 @@ Files:
         </tr>
     </table>
 </form>
+<script src="${pageContext.request.contextPath}/assets/js/scripts.js"></script>
 </body>
 </html>

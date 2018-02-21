@@ -15,7 +15,6 @@
         <!--Custom properties-->
         <servlet-version>4.0.0</servlet-version>
         <jetty-version>9.4.8.v20171121</jetty-version>
-        <jstl-version>1.2</jstl-version>
     </properties>
 
     <dependencies>
@@ -26,20 +25,19 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servlet-version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl-api -->
+        <!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
         <dependency>
-            <groupId>javax.servlet.jsp.jstl</groupId>
-            <artifactId>jstl-api</artifactId>
-            <version>${jstl-version}</version>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.1</version>
+            <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -63,7 +61,7 @@
                     <scanIntervalSeconds>10</scanIntervalSeconds>
 
                     <!--Automatic reload (default "automatic")-->
-                    <reload>automatic</reload>
+                    <reload>manual</reload>
 
                     <!--Dump out the server structure-->
                     <!--<dumpOnStart>false</dumpOnStart>-->

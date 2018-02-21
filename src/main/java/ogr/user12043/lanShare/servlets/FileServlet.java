@@ -52,6 +52,8 @@ public class FileServlet extends HttpServlet {
                 out.close();
                 // Redirect to home
                 response.sendRedirect(request.getContextPath());
+            } else if (upFilePart.getSize() == 0) {
+                response.sendError(400, "The file part can not empty");
             } else {
                 // Send conflict error
                 response.sendError(409);
