@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-import javax.swing.*;
 import java.io.*;
 import java.nio.file.Paths;
 
@@ -37,7 +36,6 @@ public class FileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             for (Part part : request.getParts()) {
-                JOptionPane.showMessageDialog(null, part.getSubmittedFileName());
                 String upFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
                 Logger.info("Uploading file name: \"" + upFileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
 
