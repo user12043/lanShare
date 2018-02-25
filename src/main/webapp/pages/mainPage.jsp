@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
 </head>
 <body>
+
+<h1 class="text-center text-primary">LAN SHARE</h1>
+
 <table class="table table-bordered table-hover table-dark text-center">
     <thead class="bg-secondary">
     <tr>
@@ -64,7 +67,7 @@
     <tbody>
     <tr>
         <td class="form-group">
-            <input class="form-control form-control-file" id="upFiles" name="upFiles" type="file" multiple="multiple">
+            <input class="btn btn-dark form-control form-control-file" id="upFiles" name="upFiles" type="file" multiple="multiple" aria-autocomplete="none">
         </td>
     </tr>
     <tr>
