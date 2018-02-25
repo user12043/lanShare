@@ -1,7 +1,16 @@
 var inputElement = document.getElementById("upFiles");
+var submitButton = document.getElementById("submitButton");
 
 // Reset input
 inputElement.value = null;
+
+inputElement.addEventListener("change", function (e) {
+    if (inputElement.files.length) {
+        submitButton.removeAttribute("disabled");
+    } else {
+        submitButton.setAttribute("disabled", "disabled");
+    }
+});
 
 function validateInput() {
     if (inputElement.files.length) {
@@ -15,7 +24,7 @@ function validateInput() {
 function submitFile() {
     if (validateInput()) {
         // Disable submit button
-        document.getElementById("submitButton").setAttribute("disabled", "disabled");
+        submitButton.setAttribute("disabled", "disabled");
 
         // Get files
         var files = inputElement.files;
@@ -25,36 +34,32 @@ function submitFile() {
 
         var formData = new FormData();
         // Add files to FormData
-
-        var count = 0;
         for (var a = 0; a < files.length; a++) {
             formData.append("upFile", files[a]);
             console.log("item: " + a);
-
-
-            var xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener("progress", function (e) {
-                var loaded = parseInt(e.loaded / e.total * 100);
-                progressBar.innerHTML = "%" + loaded;
-                progressBar.setAttribute("aria-valuenow", loaded);
-                progressBar.style.width = loaded + "%";
-            }, false);
-
-            xhr.onreadystatechange = function (e) {
-                if (this.readyState === 4) {
-                    // Count finished items
-                    count++;
-                    // If all finished
-                    if (count === files.length) {
-                        progressBar.className = progressBar.className + " bg-success";
-                        location.reload();
-                    }
-                }
-            };
-            xhr.open("post", "http://localhost:8181/lanShare/file", true);
-            // xhr.setRequestHeader("Content-Type", "multipart/form-data");
-            xhr.send(formData);
         }
+
+        // Create and send xhr
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", function (e) {
+            var loaded = parseInt(e.loaded / e.total * 100);
+            progressBar.innerHTML = "%" + loaded;
+            progressBar.setAttribute("aria-valuenow", loaded);
+            progressBar.style.width = loaded + "%";
+        }, false);
+
+        xhr.onreadystatechange = function (e) {
+            if (this.readyState === 4) {
+                console.log("status: " + this.status);
+                location.reload();
+            }
+        };
+        xhr.open("post", "file", true);
+
+        // Browser will add the header and boundary automatically
+        // xhr.setRequestHeader("Content-Type", "multipart/form-data");
+
+        xhr.send(formData);
     } else {
 
     }

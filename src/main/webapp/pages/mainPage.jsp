@@ -1,3 +1,4 @@
+<%@ page import="ogr.user12043.lanShare.util.Utils" %>
 <%@ page import="java.io.File" %>
 <%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -47,7 +48,7 @@
             %>
         </td>
         <td>
-            <%out.print(new Date(file.lastModified()));%>
+            <%out.print(Utils.getTimeAsString(new Date(file.lastModified())));%>
         </td>
     </tr>
     <%
@@ -67,7 +68,8 @@
     <tbody>
     <tr>
         <td class="form-group">
-            <input class="btn btn-dark form-control form-control-file" id="upFiles" name="upFiles" type="file" multiple="multiple" aria-autocomplete="none">
+            <input class="btn btn-dark form-control form-control-file" id="upFiles" name="upFiles" type="file"
+                   multiple="multiple" aria-autocomplete="none">
         </td>
     </tr>
     <tr>
@@ -86,7 +88,7 @@
     <tr>
         <td>
             <input id="submitButton" class="form-control btn btn-dark" type="submit" value="Submit"
-                   onclick="submitFile();">
+                   onclick="submitFile();" disabled>
         </td>
     </tr>
     </tbody>

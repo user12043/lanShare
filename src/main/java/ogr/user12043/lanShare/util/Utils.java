@@ -18,6 +18,10 @@ public class Utils {
         return format.format(date);
     }
 
+    public static String getTimeAsString(Date date) {
+        return format.format(date);
+    }
+
     // Build and html body and return
     public static String buildHtml(String body) {
 
