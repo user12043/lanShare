@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.file.Paths;
 
 /**
@@ -78,8 +79,10 @@ public class FileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Get file name and create file object
-            String fileName = request.getParameter("fileName");
+            // Get file name from encoded parameter and create file object
+            String fileName = URLDecoder.decode(request.getParameterMap().get("fileName")[0], "UTF-8");
+            // String fileName = request.getParameter("fileName");
+
             File file = new File(Properties.appFilesLocation() + File.separator + fileName);
 
             // Check file state

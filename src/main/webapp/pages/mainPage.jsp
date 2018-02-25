@@ -34,8 +34,10 @@
         <td>
             <%out.print(count + ". ");%>
         </td>
-        <td><a href="${pageContext.request.contextPath}/file?fileName=<%out.print(name);%>"><%
-            out.print(name);%></a>
+        <td>
+            <%--File name text is encoding before requesting for special chars like '&'--%>
+            <a href="#" onclick="location.href = ('file?fileName=' + encodeURIComponent(this.innerText));"><%
+                out.print(name);%></a>
         </td>
         <td>
             <%
