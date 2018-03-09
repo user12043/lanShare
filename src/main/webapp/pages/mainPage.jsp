@@ -27,8 +27,9 @@
         int count = 0;
         if (files != null) {
             for (File file : files) {
-                String name = file.getName();
-                count++;
+                if (!file.isDirectory()) {
+                    String name = file.getName();
+                    count++;
     %>
     <tr>
         <td>
@@ -54,6 +55,7 @@
         </td>
     </tr>
     <%
+                }
             }
         }
     %>
