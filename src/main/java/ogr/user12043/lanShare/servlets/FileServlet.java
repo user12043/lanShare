@@ -21,7 +21,7 @@ import java.nio.file.Paths;
  */
 
 @WebServlet(urlPatterns = "/file")
-@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L)
+@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L, fileSizeThreshold = 104857600)
 public class FileServlet extends HttpServlet {
     private byte[] buffer;
     private int read;
