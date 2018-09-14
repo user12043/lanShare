@@ -6,109 +6,114 @@ If version number here is less then 3.0, Glassfish server will give error while 
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
-    <display-name>Lan Share</display-name>
+  <display-name>Lan Share</display-name>
 
 
-    <!--XML of annotations in classes-->
+  <!--XML of annotations in classes-->
 
-    <!--Filters-->
-    <!--<filter>
-        <filter-name>AuthFilter</filter-name>
-        <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
-    </filter>
+  <!--Filters-->
+  <!--<filter>
+      <filter-name>AuthFilter</filter-name>
+      <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
+  </filter>
 
-    <filter-mapping>
-        <filter-name>AuthFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+  <filter-mapping>
+      <filter-name>AuthFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+  </filter-mapping>-->
 
-    <!--Servlets-->
-    <!--Home page-->
-    <!--<servlet>
-        <servlet-name>HomeServlet</servlet-name>
-        <servlet-class>ogr.user12043.lanShare.servlets.HomeServlet</servlet-class>
-    </servlet>-->
+  <!--Servlets-->
+  <!--Home page-->
+  <!--<servlet>
+      <servlet-name>HomeServlet</servlet-name>
+      <servlet-class>ogr.user12043.lanShare.servlets.HomeServlet</servlet-class>
+  </servlet>-->
 
-    <!--FileServlet for file processes-->
-    <!--<servlet>
-        <servlet-name>FileServlet</servlet-name>
-        <servlet-class>ogr.user12043.lanShare.servlets.FileServlet</servlet-class>
-        <multipart-config>
-            &lt;!&ndash;<location>./tmp</location>&ndash;&gt;
-            &lt;!&ndash;4 GB upload limit&ndash;&gt;
-            <max-file-size>4294967296</max-file-size>
-            &lt;!&ndash;4 GB download limit&ndash;&gt;
-            <max-request-size>4294967296</max-request-size>
-            &lt;!&ndash;0B+ files will write directly to disk&ndash;&gt;
-            <file-size-threshold>0</file-size-threshold>
-        </multipart-config>
-    </servlet>-->
+  <!--FileServlet for file processes-->
+  <!--<servlet>
+      <servlet-name>FileServlet</servlet-name>
+      <servlet-class>ogr.user12043.lanShare.servlets.FileServlet</servlet-class>
+      <multipart-config>
+          &lt;!&ndash;<location>./tmp</location>&ndash;&gt;
+          &lt;!&ndash;4 GB upload limit&ndash;&gt;
+          <max-file-size>4294967296</max-file-size>
+          &lt;!&ndash;4 GB download limit&ndash;&gt;
+          <max-request-size>4294967296</max-request-size>
+          &lt;!&ndash;0B+ files will write directly to disk&ndash;&gt;
+          <file-size-threshold>0</file-size-threshold>
+      </multipart-config>
+  </servlet>-->
 
-    <!--Error Servlet-->
-    <!--<servlet>
-        <servlet-name>ErrorServlet</servlet-name>
-        <servlet-class>ogr.user12043.lanShare.servlets.ErrorServlet</servlet-class>
-    </servlet>-->
+  <!--Error Servlet-->
+  <!--<servlet>
+      <servlet-name>ErrorServlet</servlet-name>
+      <servlet-class>ogr.user12043.lanShare.servlets.ErrorServlet</servlet-class>
+  </servlet>-->
 
-    <!--Mappings-->
-    <!--<servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/</url-pattern>
-    </servlet-mapping>-->
+  <!--Mappings-->
+  <!--<servlet-mapping>
+      <servlet-name>HomeServlet</servlet-name>
+      <url-pattern>/</url-pattern>
+  </servlet-mapping>-->
 
-    <!--<servlet-mapping>
-        <servlet-name>FileServlet</servlet-name>
-        <url-pattern>/file</url-pattern>
-    </servlet-mapping>-->
+  <!--<servlet-mapping>
+      <servlet-name>FileServlet</servlet-name>
+      <url-pattern>/file</url-pattern>
+  </servlet-mapping>-->
 
-    <!--<servlet-mapping>
-        <servlet-name>ErrorServlet</servlet-name>
-        <url-pattern>/error</url-pattern>
-    </servlet-mapping>-->
+  <!--<servlet-mapping>
+      <servlet-name>ErrorServlet</servlet-name>
+      <url-pattern>/error</url-pattern>
+  </servlet-mapping>-->
 
-    <!--For static resource files-->
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.js</url-pattern>
-    </servlet-mapping>
+  <!--For static resource files-->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
 
-    <!--Welcome files-->
-    <welcome-file-list>
-        <welcome-file>pages/mainPage.jsp</welcome-file>
-        <welcome-file>index.html</welcome-file>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
 
-    <!--Error pages-->
-    <error-page>
-        <error-code>401</error-code>
-        <location>/error</location>
-    </error-page>
+  <!--Welcome files-->
+  <welcome-file-list>
+    <welcome-file>pages/mainPage.jsp</welcome-file>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!--Error pages-->
+  <error-page>
+    <error-code>401</error-code>
+    <location>/error</location>
+  </error-page>
 </web-app>
 
-        <!--
-        NOTE:
-        If you get following error, (I get from Glassfish 4.1.1):
-        "The content of element type "web-app" must match "(icon?,display-name?,description?,distributable?,context-param*,filter*,filter-mapping*,listener*,servlet*,servlet-mapping*,session-config?,mime-mapping*,welcome-file-list?,error-page*,taglib*,resource-env-ref*,resource-ref*,security-constraint*,login-config?,security-role*,env-entry*,ejb-ref*,ejb-local-ref*)".."
+    <!--
+    NOTE:
+    If you get following error, (I get from Glassfish 4.1.1):
+    "The content of element type "web-app" must match "(icon?,display-name?,description?,distributable?,context-param*,filter*,filter-mapping*,listener*,servlet*,servlet-mapping*,session-config?,mime-mapping*,welcome-file-list?,error-page*,taglib*,resource-env-ref*,resource-ref*,security-constraint*,login-config?,security-role*,env-entry*,ejb-ref*,ejb-local-ref*)".."
 
-        you must order the content of this file according to given order in error.
+    you must order the content of this file according to given order in error.
 
-        E.g this is wrong:
-    <filter-mapping>
-        <filter-name>AuthFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    E.g this is wrong:
+<filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
 
-    <filter>
-        <filter-name>AuthFilter</filter-name>
-        <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
-    </filter>
+<filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>ogr.user12043.lanShare.filter.AuthFilter</filter-class>
+</filter>
 
 
-        Because filter mapping comes before filter. (Even it can be mapping of another filter.)
-         -->
+    Because filter mapping comes before filter. (Even it can be mapping of another filter.)
+     -->
