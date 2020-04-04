@@ -1,10 +1,10 @@
-var inputElement = document.getElementById("upFiles");
-var submitButton = document.getElementById("submitButton");
+const inputElement = document.getElementById("upFiles");
+const submitButton = document.getElementById("submitButton");
 
 // Reset input
 inputElement.value = null;
 
-inputElement.addEventListener("change", function (e) {
+inputElement.addEventListener("change", function () {
     if (inputElement.files.length) {
         submitButton.removeAttribute("disabled");
     } else {
@@ -27,28 +27,28 @@ function submitFile() {
         submitButton.setAttribute("disabled", "disabled");
 
         // Get files
-        var files = inputElement.files;
+        const files = inputElement.files;
 
-        var progressBar = document.getElementById("progressBar");
+        const progressBar = document.getElementById("progressBar");
         progressBar.className = progressBar.className + " progress-bar-animated";
 
-        var formData = new FormData();
+        const formData = new FormData();
         // Add files to FormData
-        for (var a = 0; a < files.length; a++) {
+        for (let a = 0; a < files.length; a++) {
             formData.append("upFile", files[a]);
             console.log("item: " + a);
         }
 
         // Create and send xhr
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", function (e) {
-            var loaded = parseInt(e.loaded / e.total * 100);
+            const loaded = parseInt(e.loaded / e.total * 100);
             progressBar.innerHTML = "%" + loaded;
             progressBar.setAttribute("aria-valuenow", loaded);
             progressBar.style.width = loaded + "%";
         }, false);
 
-        xhr.onreadystatechange = function (e) {
+        xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
                 console.log("status: " + this.status);
                 location.reload();
@@ -61,6 +61,6 @@ function submitFile() {
 
         xhr.send(formData);
     } else {
-
+        // TODO show error message
     }
 }

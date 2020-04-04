@@ -1,6 +1,7 @@
 package ogr.user12043.lanShare.servlets;
 
 import ogr.user12043.lanShare.logging.Logger;
+import ogr.user12043.lanShare.util.Constants;
 import ogr.user12043.lanShare.util.Properties;
 import ogr.user12043.lanShare.util.Utils;
 
@@ -21,20 +22,22 @@ import java.nio.file.Paths;
  */
 
 @WebServlet(urlPatterns = "/file")
-@MultipartConfig(location = "./tmp", maxRequestSize = 4294967296L, maxFileSize = 4294967296L, fileSizeThreshold = 104857600)
+@MultipartConfig(location = Constants.TEMPORARY_FILE_LOCATION, maxRequestSize = Constants.MAX_REQUEST_SIZE, maxFileSize = Constants.MAX_FILE_SIZE, fileSizeThreshold = Constants.FILE_SIZE_THRESHOLD)
 public class FileServlet extends HttpServlet {
-    private byte[] buffer;
+    private byte[] uploadBuffer;
+    private byte[] downloadBuffer;
     private int read;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        buffer = new byte[4096];
+        uploadBuffer = new byte[Constants.UPLOAD_BUFFER_SIZE];
+        downloadBuffer = new byte[Constants.DOWNLOAD_BUFFER_SIZE];
         read = 0;
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             for (Part part : request.getParts()) {
                 String upFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
@@ -47,15 +50,15 @@ public class FileServlet extends HttpServlet {
                 if (!saveFile.exists()) {
                     OutputStream out = new FileOutputStream(saveFile);
                     // Read from InputStream and write to the FileOutputStream
-                    while ((read = upFileStream.read(buffer)) != -1) {
-                        out.write(buffer, 0, read);
+                    while ((read = upFileStream.read(uploadBuffer)) != -1) {
+                        out.write(uploadBuffer, 0, read);
                     }
                     out.close();
                 } else if (part.getSize() == 0) {
-                    response.sendError(400, "The file part can not empty");
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "The file part can not empty");
                 } else {
                     // Send conflict error
-                    response.sendError(409);
+                    response.sendError(HttpServletResponse.SC_CONFLICT);
                 }
                 upFileStream.close();
             }
@@ -72,12 +75,12 @@ public class FileServlet extends HttpServlet {
             String errorMessage = e.getMessage();
             Logger.error(errorMessage);
             // Send internal server error
-            response.sendError(500, errorMessage);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             // Get file name from encoded parameter and create file object
             String fileName = URLDecoder.decode(request.getParameterMap().get("fileName")[0], "UTF-8");
@@ -94,7 +97,7 @@ public class FileServlet extends HttpServlet {
                 // Not setting file name directly because there is any special character in it maybe.
                 // Set encoding depending on the browser
                 boolean isIE = (request.getHeader("user-agent").contains("MSIE"));
-                String sendName = Utils.fixSpecialCharactersInFileName(fileName, isIE);
+                String sendName = Utils.encodeFileName(fileName, isIE);
                 response.setHeader("content-disposition", "attachment; filename=\"" + sendName + "\"");
 
                 // Set content length. Browser will know file size.
@@ -104,21 +107,21 @@ public class FileServlet extends HttpServlet {
                 FileInputStream inputStream = new FileInputStream(file);
 
                 // Write the file to response output
-                while ((read = inputStream.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
+                while ((read = inputStream.read(downloadBuffer)) != -1) {
+                    out.write(downloadBuffer, 0, read);
                 }
 
                 inputStream.close();
                 out.flush();
             } else {
                 // Send not found error
-                response.sendError(404);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             Logger.error(errorMessage);
             // Send internal server error
-            response.sendError(500, errorMessage);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
         }
     }
 

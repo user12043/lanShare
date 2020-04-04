@@ -11,7 +11,7 @@ import java.util.Date;
  */
 
 public class Utils {
-    private static DateFormat format = new SimpleDateFormat("(dd/MM/yyyy) HH:mm:ss");
+    private static DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public static String getTimeAsString() {
         Date date = new Date();
@@ -36,7 +36,7 @@ public class Utils {
     }
 
     // Encode given string for special characters in downloading file names
-    public static String fixSpecialCharactersInFileName(String fileName, boolean isIE) throws UnsupportedEncodingException {
+    public static String encodeFileName(String fileName, boolean isIE) throws UnsupportedEncodingException {
         byte[] nameBytes = fileName.getBytes((isIE) ? "WINDOWS-1250" : "UTF-8");
         StringBuilder sendName = new StringBuilder();
         for (byte b : nameBytes) {

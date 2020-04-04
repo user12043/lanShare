@@ -44,9 +44,9 @@
             <%
                 long fileSpace = file.length();
                 if (fileSpace < 1048576) {
-                    out.print("<u>" + (fileSpace) / (1024d) + "</u> <span class=\"text-warning\">KB</span>");
+                    out.print("<u>" + Math.round((fileSpace) / (1024d)) + "</u> <span class=\"text-warning\">KB</span>");
                 } else {
-                    out.print("<u>" + (fileSpace) / (1024d * 1024d) + "</u> <span class=\"text-warning\">MB</span>");
+                    out.print("<u>" + Math.round((fileSpace) / (1024d * 1024d)) + "</u> <span class=\"text-warning\">MB</span>");
                 }
             %>
         </td>
