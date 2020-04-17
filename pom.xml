@@ -1,88 +1,96 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>ogr.user12043</groupId>
-    <artifactId>lanShare</artifactId>
-    <packaging>war</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>lanShare Maven WebApp</name>
-    <url>http://maven.apache.org</url>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ogr.user12043</groupId>
+  <artifactId>lanShare</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>lanShare Maven WebApp</name>
+  <url>http://maven.apache.org</url>
 
-    <properties>
-        <!--Describe compiler version-->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <!--Custom properties-->
-        <servlet-version>4.0.0</servlet-version>
-        <jetty-version>9.4.8.v20171121</jetty-version>
-    </properties>
+  <properties>
+    <!--Describe compiler version-->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <!--Custom properties-->
+    <servlet-version>4.0.0</servlet-version>
+    <jetty-version>9.4.8.v20171121</jetty-version>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>${servlet-version}</version>
+    </dependency>
 
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet-version}</version>
-        </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>javax.servlet.jsp-api</artifactId>
+      <version>2.3.1</version>
+      <scope>provided</scope>
+    </dependency>
 
-        <!-- https://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api -->
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>2.3.1</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <!--TEST-->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
 
-    <build>
-        <finalName>lanShare</finalName>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-        <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                <version>${jetty-version}</version>
-                <configuration>
-                    <!--Http configuration-->
-                    <httpConnector>
-                        <port>8181</port>
-                        <!--Listening host (0.0.0.0 for all)-->
-                        <host>0.0.0.0</host>
-                        <name>LanShare</name>
-                    </httpConnector>
+  <build>
+    <finalName>lanShare</finalName>
 
-                    <!--Scan interval for file changes (0 to disable)-->
-                    <scanIntervalSeconds>10</scanIntervalSeconds>
+    <plugins>
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty-version}</version>
+        <configuration>
+          <!--Http configuration-->
+          <httpConnector>
+            <port>8181</port>
+            <!--Listening host (0.0.0.0 for all)-->
+            <host>0.0.0.0</host>
+            <name>LanShare</name>
+          </httpConnector>
 
-                    <!--Automatic reload (default "automatic")-->
-                    <reload>manual</reload>
+          <!--Scan interval for file changes (0 to disable)-->
+          <scanIntervalSeconds>10</scanIntervalSeconds>
 
-                    <!--Dump out the server structure-->
-                    <!--<dumpOnStart>false</dumpOnStart>-->
-                    <webApp>
-                        <!--context path after url (E.g localhost:8080/lanShare)-->
-                        <contextPath>/lanShare</contextPath>
+          <!--Automatic reload (default "automatic")-->
+          <reload>manual</reload>
 
-                        <!--web.xml file location-->
-                        <!--<descriptor>/src/main/webapp/WEB-INF/web.xml</descriptor>-->
+          <!--Dump out the server structure-->
+          <!--<dumpOnStart>false</dumpOnStart>-->
+          <webApp>
+            <!--context path after url (E.g localhost:8080/lanShare)-->
+            <contextPath>/lanShare</contextPath>
 
-                        <!--additional web.xml-->
-                        <!--<overrideDescriptor>/src/main/webapp/WEB-INF/webOverride.xml</overrideDescriptor>-->
+            <!--web.xml file location-->
+            <!--<descriptor>/src/main/webapp/WEB-INF/web.xml</descriptor>-->
 
-                        <!--path to static resources-->
-                        <!--<baseResource>/src/main/webapp</baseResource>-->
+            <!--additional web.xml-->
+            <!--<overrideDescriptor>/src/main/webapp/WEB-INF/webOverride.xml</overrideDescriptor>-->
 
-                        <!--Can use multiple resource directories to serve static content-->
-                        <!--<resourceBases>/staticFiles</resourceBases>-->
-                    </webApp>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+            <!--path to static resources-->
+            <!--<baseResource>/src/main/webapp</baseResource>-->
+
+            <!--Can use multiple resource directories to serve static content-->
+            <!--<resourceBases>/staticFiles</resourceBases>-->
+          </webApp>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

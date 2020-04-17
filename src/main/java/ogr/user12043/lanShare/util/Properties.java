@@ -10,10 +10,8 @@ import java.io.File;
  */
 
 public class Properties {
-    // User's home folder
-    private static String userHome = System.getProperty("user.home");
-
     public static String appConfigDir() {
+        final String userHome = System.getProperty("user.home");
         String path = userHome + File.separator + ".lanShare";
         File dir = new File(path);
         if (!dir.exists() || !dir.isDirectory()) {

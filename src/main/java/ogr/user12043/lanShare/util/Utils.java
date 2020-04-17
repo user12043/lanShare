@@ -1,8 +1,6 @@
 package ogr.user12043.lanShare.util;
 
 import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -11,15 +9,13 @@ import java.util.Date;
  */
 
 public class Utils {
-    private static DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
     public static String getTimeAsString() {
         Date date = new Date();
-        return format.format(date);
+        return Constants.DATE_FORMAT.format(date);
     }
 
     public static String getTimeAsString(Date date) {
-        return format.format(date);
+        return Constants.DATE_FORMAT.format(date);
     }
 
     // Build and html body and return

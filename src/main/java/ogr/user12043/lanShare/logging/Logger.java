@@ -1,5 +1,6 @@
 package ogr.user12043.lanShare.logging;
 
+import ogr.user12043.lanShare.util.Constants;
 import ogr.user12043.lanShare.util.Properties;
 import ogr.user12043.lanShare.util.Utils;
 
@@ -14,9 +15,8 @@ import java.io.Writer;
  */
 
 public class Logger {
-    private static File logFile = new File(Properties.logFileLocation());
+    private static final File logFile = new File(Properties.logFileLocation());
     private static Writer writer;
-    private static String separator = "\n=============================================================\n";
 
     // To use one instance of writer
     private static Writer getWriter() {
@@ -43,14 +43,14 @@ public class Logger {
 
     // Logging functions
     public static void info(String value) {
-        write(Utils.getTimeAsString() + "[INFO]: " + value + separator);
+        write(Utils.getTimeAsString() + " [INFO]: " + value + Constants.LOG_SEPARATOR);
     }
 
     public static void error(String value) {
-        write(Utils.getTimeAsString() + "[ERROR]: " + value + separator);
+        write(Utils.getTimeAsString() + " [ERROR]: " + value + Constants.LOG_SEPARATOR);
     }
 
-    // Same functions to can specify the target file
+    // Same functions to be able to specify the target file
     private static void write(String value, File targetFile) {
         try {
             FileWriter newWriter = new FileWriter(targetFile, true);
@@ -62,10 +62,10 @@ public class Logger {
     }
 
     public static void info(String value, File targetFile) {
-        write((Utils.getTimeAsString() + "[INFO]: " + value + separator), targetFile);
+        write((Utils.getTimeAsString() + " [INFO]: " + value + Constants.LOG_SEPARATOR), targetFile);
     }
 
     public static void error(String value, File targetFile) {
-        write((Utils.getTimeAsString() + "[ERROR]: " + value + separator), targetFile);
+        write((Utils.getTimeAsString() + " [ERROR]: " + value + Constants.LOG_SEPARATOR), targetFile);
     }
 }

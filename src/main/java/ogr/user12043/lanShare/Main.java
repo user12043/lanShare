@@ -6,7 +6,7 @@ package ogr.user12043.lanShare;
  */
 
 public class Main {
-    public static void main(String args[]) {
-        
+    public static void main(String[] args) {
+
     }
 }
