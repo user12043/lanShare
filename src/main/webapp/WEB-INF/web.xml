@@ -98,7 +98,7 @@ If version number here is less then 3.0, Glassfish server will give error while 
 
     <!--
     NOTE:
-    If you get following error, (I get from Glassfish 4.1.1):
+    If you get following error, (I got it from Glassfish 4.1.1):
     "The content of element type "web-app" must match "(icon?,display-name?,description?,distributable?,context-param*,filter*,filter-mapping*,listener*,servlet*,servlet-mapping*,session-config?,mime-mapping*,welcome-file-list?,error-page*,taglib*,resource-env-ref*,resource-ref*,security-constraint*,login-config?,security-role*,env-entry*,ejb-ref*,ejb-local-ref*)".."
 
     you must order the content of this file according to given order in error.
