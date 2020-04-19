@@ -33,18 +33,4 @@ public class UtilsTest {
         String expectedString = "20/03/2020 19:38:12";
         Assert.assertEquals(expectedString, Utils.getTimeAsString(date));
     }
-
-    @Test
-    public void encodeFileNameTest() throws UnsupportedEncodingException {
-        String fileName = "/mnt/windows/Users/user12043/Desktop/türkçe-karakter-ve boşluk içeren dosya adı.txt";
-        String encoded = Utils.encodeFileName(fileName, false);
-        Assert.assertEquals("/mnt/windows/Users/user12043/Desktop/tÃ¼rkÃ§e-karakter-ve boÅ\u009Fluk iÃ§eren dosya adÄ±.txt", encoded);
-    }
-
-    @Test
-    public void encodeFileNameTestIE() throws UnsupportedEncodingException {
-        String fileName = "/mnt/windows/Users/user12043/Desktop/türkçe-karakter-ve boşluk içeren dosya adı.txt";
-        String encoded = Utils.encodeFileName(fileName, true);
-        Assert.assertEquals("/mnt/windows/Users/user12043/Desktop/türkçe-karakter-ve boºluk içeren dosya ad?.txt", encoded);
-    }
 }

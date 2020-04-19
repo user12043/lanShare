@@ -50,15 +50,25 @@ public class FileServletTest {
         prefs.put("download.default_directory", TestConstants.DOWNLOAD_DIR);
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("--incognito");
-        driver = new ChromeDriver(options);
+        try {
+            driver = new ChromeDriver(options);
+        } catch (IllegalStateException e) {
+            System.out.println("Setting chrome web driver");
+            // set chrome web driver
+            String os = System.getProperty("os.name");
+            if(os.contains("win") || os.contains("Win")) {
+                System.setProperty("webdriver.chrome.driver", Paths.get("chromeDriver", "chromedriver.exe").toAbsolutePath().toString());
+            } else if (os.contains("nux") || os.contains("nix") || os.contains("aix")) {
+                System.setProperty("webdriver.chrome.driver", Paths.get("chromeDriver", "chromedriver").toAbsolutePath().toString());
+            }
+            
+            driver = new ChromeDriver(options);
+        }
     }
 
     @After
     public void tearDown() throws Exception {
         removeTestFiles();
-        Files.deleteIfExists(Paths.get(Properties.appFilesLocation(), ""));
-        Files.deleteIfExists(Paths.get(Properties.logFileLocation(), ""));
-        Files.deleteIfExists(Paths.get(Properties.appConfigDir(), ""));
         driver.close();
     }
 
@@ -137,10 +147,6 @@ public class FileServletTest {
      * @throws IOException - Error while reading/writing files
      */
     private void removeTestFiles() throws IOException {
-        Files.deleteIfExists(testFile1LinkPath);
-        Files.deleteIfExists(testFile2LinkPath);
-        Files.deleteIfExists(testFile3LinkPath);
-
         Files.deleteIfExists(testFile1DownloadPath);
         Files.deleteIfExists(testFile2DownloadPath);
         Files.deleteIfExists(testFile3DownloadPath);

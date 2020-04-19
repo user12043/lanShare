@@ -17,7 +17,7 @@ public class TestUtils {
         try {
             Files.createSymbolicLink(targetPath, sourcePath);
             System.out.println("Created symlink '" + sourcePath + " -> " + targetPath + "'");
-        } catch (UnsupportedOperationException e) {
+        } catch (Exception e) {
             System.err.println("Unable to link file: '" + targetPath + "', copying...");
             Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
