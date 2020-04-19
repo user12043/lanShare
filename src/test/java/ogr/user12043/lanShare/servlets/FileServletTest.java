@@ -47,7 +47,7 @@ public class FileServletTest {
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", Paths.get("", "downloads").toAbsolutePath().toString());
+        prefs.put("download.default_directory", TestConstants.DOWNLOAD_DIR);
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("--incognito");
         driver = new ChromeDriver(options);
@@ -120,6 +120,15 @@ public class FileServletTest {
             Assert.assertTrue("Download failed for " + testFile.getFileName(), targetFile.exists());
             System.out.println("Test file '" + testFile.getFileName() + "' downloaded successfully");
         }
+    }
+
+    @Test
+    public void downloadNonExistentFile() {
+        driver.get(TestConstants.APP_URL + "/file?fileName=");
+        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
+
+        driver.get(TestConstants.APP_URL + "/file?fileName=IdoNotExist.txt");
+        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
     }
 
     /**
