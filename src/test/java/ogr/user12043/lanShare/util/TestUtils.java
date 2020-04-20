@@ -1,8 +1,10 @@
 package ogr.user12043.lanShare.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 /**
@@ -21,5 +23,13 @@ public class TestUtils {
             System.err.println("Unable to link file: '" + targetPath + "', copying...");
             Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
         }
+    }
+
+    public static File getUploadTargetFile(File sourceFile) {
+        return Paths.get(Properties.appFilesLocation(), sourceFile.getName()).toFile();
+    }
+
+    public static File getDownloadTargetFile(File sourceFile) {
+        return Paths.get(TestConstants.DOWNLOAD_DIR, sourceFile.getName()).toFile();
     }
 }

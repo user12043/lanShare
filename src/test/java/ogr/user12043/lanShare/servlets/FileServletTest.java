@@ -1,6 +1,5 @@
 package ogr.user12043.lanShare.servlets;
 
-import ogr.user12043.lanShare.util.Properties;
 import ogr.user12043.lanShare.util.TestConstants;
 import ogr.user12043.lanShare.util.TestUtils;
 import org.junit.After;
@@ -14,9 +13,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
@@ -29,18 +28,16 @@ import java.util.Map;
  * @author user12043
  */
 public class FileServletTest {
-    private final Path testFile1 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_1_NAME);
+    /*private final Path testFile1 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_1_NAME);
     private final Path testFile2 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_2_NAME);
     private final Path testFile3 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_3_NAME);
-
-    private final Path testFile1LinkPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_1_NAME);
-    private final Path testFile2LinkPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_2_NAME);
-    private final Path testFile3LinkPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_3_NAME);
-
+    private final Path testFile1UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_1_NAME);
+    private final Path testFile2UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_2_NAME);
+    private final Path testFile3UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_3_NAME);
     private final Path testFile1DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_1_NAME);
     private final Path testFile2DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_2_NAME);
-    private final Path testFile3DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_3_NAME);
-
+    private final Path testFile3DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_3_NAME);*/
+    private File[] testFiles;
     private WebDriver driver;
 
     @Before
@@ -56,14 +53,17 @@ public class FileServletTest {
             System.out.println("Setting chrome web driver");
             // set chrome web driver
             String os = System.getProperty("os.name");
-            if(os.contains("win") || os.contains("Win")) {
+            if (os.contains("win") || os.contains("Win")) {
                 System.setProperty("webdriver.chrome.driver", Paths.get("chromeDriver", "chromedriver.exe").toAbsolutePath().toString());
             } else if (os.contains("nux") || os.contains("nix") || os.contains("aix")) {
                 System.setProperty("webdriver.chrome.driver", Paths.get("chromeDriver", "chromedriver").toAbsolutePath().toString());
             }
-            
+
             driver = new ChromeDriver(options);
         }
+
+        File testFilesDir = new File(TestConstants.TEST_FILES_DIR);
+        testFiles = testFilesDir.listFiles(File::isFile);
     }
 
     @After
@@ -80,25 +80,38 @@ public class FileServletTest {
     @Test
     public void doPostTest() throws IOException {
         removeTestFiles();
-        Path[][] testFiles = new Path[][]{{testFile1, testFile1LinkPath}, {testFile2, testFile2LinkPath}, {testFile3, testFile3LinkPath}};
 
-        for (Path[] testFileSet : testFiles) {
-            Path testFile = testFileSet[0];
-            Path uploadFile = testFileSet[1];
-            System.out.println("Upload test for: " + testFile.getFileName());
+        // Test all test files
+        for (File testFile : testFiles) {
+            System.out.println("Upload test for: " + testFile.getName());
+
+            // Selenium in action
             driver.get(TestConstants.APP_URL);
 //            driver.findElement(By.id("upFiles")).click();
-            driver.findElement(By.id("upFiles")).sendKeys(testFile.toAbsolutePath().toString());
+            driver.findElement(By.id("upFiles")).sendKeys(testFile.getAbsolutePath());
             driver.findElement(By.id("submitButton")).click();
 
-            File targetFile = uploadFile.toFile();
+            File targetFile = TestUtils.getUploadTargetFile(testFile);
 
+            // wait until upload complete
             FluentWait<WebDriver> wait = new FluentWait<>(driver)
                     .withTimeout(Duration.ofSeconds(50)) // 50 seconds max to upload
                     .pollingEvery(Duration.ofMillis(100)); // check every 100 ms
-            wait.until(webDriver -> targetFile.exists() && targetFile.length() == testFile.toFile().length());
-            Assert.assertTrue("Upload failed for " + testFile.getFileName(), targetFile.exists());
-            System.out.println("Test file '" + testFile.getFileName() + "' uploaded successfully");
+            wait.until(webDriver -> targetFile.exists() && targetFile.length() == testFile.length());
+
+            // Compare the files byte by byte
+            System.out.println("Upload completed. Comparing files...");
+            FileReader sourceReader = new FileReader(testFile);
+            FileReader targetReader = new FileReader(targetFile);
+
+            int sourceRead;
+            int targetRead;
+            while ((sourceRead = sourceReader.read()) != -1) {
+                targetRead = targetReader.read();
+                Assert.assertEquals("Upload failed for " + testFile.getName(), sourceRead, targetRead);
+            }
+
+            System.out.println("Test file '" + testFile.getName() + "' uploaded successfully");
         }
     }
 
@@ -110,25 +123,35 @@ public class FileServletTest {
     @Test
     public void doGetTest() throws IOException {
         putTestFiles();
-        Path[][] testFiles = new Path[][]{{testFile1, testFile1DownloadPath}, {testFile2, testFile2DownloadPath}, {testFile3, testFile3DownloadPath}};
 
-        for (Path[] testFileSet : testFiles) {
-            Path testFile = testFileSet[0];
-            Path downloadFile = testFileSet[1];
-            System.out.println("Download test for: " + testFile.getFileName());
+        for (File testFile : testFiles) {
+            System.out.println("Download test for: " + testFile.getName());
+
+            // Selenium in action
             driver.get(TestConstants.APP_URL);
-            driver.findElement(By.linkText(testFile.getFileName().toString())).click();
+            driver.findElement(By.linkText(testFile.getName())).click();
 
-            // create target file
-            File targetFile = downloadFile.toFile();
+            File targetFile = TestUtils.getDownloadTargetFile(testFile);
 
             // wait until download complete
             FluentWait<WebDriver> wait = new FluentWait<>(driver)
                     .withTimeout(Duration.ofSeconds(30)) // 30 seconds max to download
                     .pollingEvery(Duration.ofMillis(100)); // check every 100 ms
-            wait.until(o -> targetFile.exists() && targetFile.length() == testFile.toFile().length());
-            Assert.assertTrue("Download failed for " + testFile.getFileName(), targetFile.exists());
-            System.out.println("Test file '" + testFile.getFileName() + "' downloaded successfully");
+            wait.until(o -> targetFile.exists() && targetFile.length() == testFile.length());
+
+            // Compare the files byte by byte
+            System.out.println("Download completed. Comparing files...");
+            FileReader sourceReader = new FileReader(testFile);
+            FileReader targetReader = new FileReader(targetFile);
+
+            int sourceRead;
+            int targetRead;
+            while ((sourceRead = sourceReader.read()) != -1) {
+                targetRead = targetReader.read();
+                Assert.assertEquals("Download failed for " + testFile.getName(), sourceRead, targetRead);
+            }
+
+            System.out.println("Test file '" + testFile.getName() + "' downloaded successfully");
         }
     }
 
@@ -147,18 +170,16 @@ public class FileServletTest {
      * @throws IOException - Error while reading/writing files
      */
     private void removeTestFiles() throws IOException {
-        Files.deleteIfExists(testFile1DownloadPath);
-        Files.deleteIfExists(testFile2DownloadPath);
-        Files.deleteIfExists(testFile3DownloadPath);
+        for (File testFile : testFiles) {
+            Files.deleteIfExists(TestUtils.getUploadTargetFile(testFile).toPath());
+            Files.deleteIfExists(TestUtils.getDownloadTargetFile(testFile).toPath());
+        }
     }
 
     private void putTestFiles() throws IOException {
-        Assert.assertTrue("Test file 1 does not exists", testFile1.toFile().exists());
-        Assert.assertTrue("Test file 2 does not exists", testFile2.toFile().exists());
-        Assert.assertTrue("Test file 3 does not exists", testFile3.toFile().exists());
-
-        TestUtils.copyOrLinkFile(testFile1.toAbsolutePath(), testFile1LinkPath);
-        TestUtils.copyOrLinkFile(testFile2.toAbsolutePath(), testFile2LinkPath);
-        TestUtils.copyOrLinkFile(testFile3.toAbsolutePath(), testFile3LinkPath);
+        for (File testFile : testFiles) {
+            Assert.assertTrue("Test file '" + testFile.getName() + "' does not exists!", testFile.exists());
+            TestUtils.copyOrLinkFile(testFile.toPath(), TestUtils.getUploadTargetFile(testFile).toPath());
+        }
     }
 }

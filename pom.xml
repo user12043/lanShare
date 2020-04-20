@@ -12,6 +12,9 @@
     <!--Describe compiler version-->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <!--Encodings-->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!--Custom properties-->
     <servlet-version>4.0.1</servlet-version>
     <jetty-version>9.4.12.v20180830</jetty-version>
