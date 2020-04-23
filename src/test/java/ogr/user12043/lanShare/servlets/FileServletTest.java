@@ -20,6 +20,13 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.AfterClass;
+import org.junit.FixMethodOrder;
+import org.junit.runners.MethodSorters;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created on 15.04.2020 - 18:37
@@ -27,18 +34,10 @@ import java.util.Map;
  *
  * @author user12043
  */
+@FixMethodOrder(MethodSorters.JVM)
 public class FileServletTest {
-    /*private final Path testFile1 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_1_NAME);
-    private final Path testFile2 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_2_NAME);
-    private final Path testFile3 = Paths.get(TestConstants.TEST_FILES_DIR, TestConstants.TEST_FILE_3_NAME);
-    private final Path testFile1UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_1_NAME);
-    private final Path testFile2UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_2_NAME);
-    private final Path testFile3UploadPath = Paths.get(Properties.appFilesLocation(), TestConstants.TEST_FILE_3_NAME);
-    private final Path testFile1DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_1_NAME);
-    private final Path testFile2DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_2_NAME);
-    private final Path testFile3DownloadPath = Paths.get(TestConstants.DOWNLOAD_DIR, TestConstants.TEST_FILE_3_NAME);*/
-    private File[] testFiles;
-    private WebDriver driver;
+    private static File[] testFiles;
+    private static WebDriver driver;
 
     @Before
     public void setUp() {
@@ -67,9 +66,18 @@ public class FileServletTest {
     }
 
     @After
-    public void tearDown() throws Exception {
-        removeTestFiles();
+    public void tearDown() {
         driver.close();
+        driver.quit();
+    }
+
+    @Test
+    public void downloadNonExistentFile() {
+        driver.get(TestConstants.APP_URL + "/file?fileName=");
+        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
+
+        driver.get(TestConstants.APP_URL + "/file?fileName=IdoNotExist.txt");
+        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
     }
 
     /**
@@ -94,10 +102,8 @@ public class FileServletTest {
             File targetFile = TestUtils.getUploadTargetFile(testFile);
 
             // wait until upload complete
-            FluentWait<WebDriver> wait = new FluentWait<>(driver)
-                    .withTimeout(Duration.ofSeconds(50)) // 50 seconds max to upload
-                    .pollingEvery(Duration.ofMillis(100)); // check every 100 ms
-            wait.until(webDriver -> targetFile.exists() && targetFile.length() == testFile.length());
+            WebDriverWait wait = new WebDriverWait(driver, 50, 100);
+            wait.until(d -> targetFile.exists() && targetFile.length() == testFile.length());
 
             // Compare the files byte by byte
             System.out.println("Upload completed. Comparing files...");
@@ -122,8 +128,6 @@ public class FileServletTest {
      */
     @Test
     public void doGetTest() throws IOException {
-        putTestFiles();
-
         for (File testFile : testFiles) {
             System.out.println("Download test for: " + testFile.getName());
 
@@ -134,10 +138,8 @@ public class FileServletTest {
             File targetFile = TestUtils.getDownloadTargetFile(testFile);
 
             // wait until download complete
-            FluentWait<WebDriver> wait = new FluentWait<>(driver)
-                    .withTimeout(Duration.ofSeconds(30)) // 30 seconds max to download
-                    .pollingEvery(Duration.ofMillis(100)); // check every 100 ms
-            wait.until(o -> targetFile.exists() && targetFile.length() == testFile.length());
+            WebDriverWait wait = new WebDriverWait(driver, 30, 100);
+            wait.until(d -> targetFile.exists() && targetFile.length() == testFile.length());
 
             // Compare the files byte by byte
             System.out.println("Download completed. Comparing files...");
@@ -155,21 +157,12 @@ public class FileServletTest {
         }
     }
 
-    @Test
-    public void downloadNonExistentFile() {
-        driver.get(TestConstants.APP_URL + "/file?fileName=");
-        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
-
-        driver.get(TestConstants.APP_URL + "/file?fileName=IdoNotExist.txt");
-        Assert.assertEquals("Error 404 Not Found", driver.getTitle());
-    }
-
     /**
      * Removes the downloaded and posted sample files if exists
      *
      * @throws IOException - Error while reading/writing files
      */
-    private void removeTestFiles() throws IOException {
+    private static void removeTestFiles() throws IOException {
         for (File testFile : testFiles) {
             Files.deleteIfExists(TestUtils.getUploadTargetFile(testFile).toPath());
             Files.deleteIfExists(TestUtils.getDownloadTargetFile(testFile).toPath());

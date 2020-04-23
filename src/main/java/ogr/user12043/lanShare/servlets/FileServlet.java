@@ -38,6 +38,7 @@ public class FileServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        OutputStream out = null;
         try {
             for (Part part : request.getParts()) {
                 String upFileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
@@ -48,7 +49,7 @@ public class FileServlet extends HttpServlet {
                 File saveFile = new File(Properties.appFilesLocation() + File.separator + upFileName);
 
                 if (!saveFile.exists()) {
-                    OutputStream out = new FileOutputStream(saveFile);
+                    out = new FileOutputStream(saveFile);
                     // Read from InputStream and write to the FileOutputStream
                     while ((read = upFileStream.read(uploadBuffer)) != -1) {
                         out.write(uploadBuffer, 0, read);
@@ -72,6 +73,9 @@ public class FileServlet extends HttpServlet {
             //upFilePart.write(Properties.appFilesLocation() + File.separator + upFileName);
             //</editor-fold>
         } catch (Exception e) {
+            if (out != null) {
+                out.close();
+            }
             String errorMessage = e.getMessage();
             Logger.error(errorMessage);
             // Send internal server error
@@ -81,6 +85,7 @@ public class FileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        FileInputStream inputStream = null;
         try {
             // Get file name from encoded parameter and create file object
             String fileName = URLDecoder.decode(request.getParameterMap().get("fileName")[0], "UTF-8");
@@ -104,7 +109,7 @@ public class FileServlet extends HttpServlet {
                 response.setContentLengthLong(file.length());
 
                 OutputStream out = response.getOutputStream();
-                FileInputStream inputStream = new FileInputStream(file);
+                inputStream = new FileInputStream(file);
 
                 // Write the file to response output
                 while ((read = inputStream.read(downloadBuffer)) != -1) {
@@ -118,6 +123,9 @@ public class FileServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
+            if (inputStream != null) {
+                inputStream.close();
+            }
             String errorMessage = e.getMessage();
             Logger.error(errorMessage);
             // Send internal server error
