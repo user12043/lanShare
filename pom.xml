@@ -19,6 +19,7 @@
     <servlet-version>4.0.1</servlet-version>
     <jetty-version>9.4.12.v20180830</jetty-version>
     <selenium-version>3.141.59</selenium-version>
+    <http.port>8181</http.port>
   </properties>
 
   <dependencies>
@@ -54,7 +55,7 @@
         <configuration>
           <!--Http configuration-->
           <httpConnector>
-            <port>8181</port>
+            <port>${http.port}</port>
             <!--Listening host (0.0.0.0 for all)-->
             <host>0.0.0.0</host>
             <name>LanShare</name>
