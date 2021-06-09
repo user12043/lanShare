@@ -11,8 +11,11 @@ import java.text.SimpleDateFormat;
  */
 public class Constants {
     public static final String TEMPORARY_FILE_LOCATION = "./tmp";
+    // The maximum size allowed for a multipart/form-data request, in bytes
     public static final long MAX_REQUEST_SIZE = 4294967296L;
+    // The maximum size allowed for uploaded files, in bytes
     public static final long MAX_FILE_SIZE = 4294967296L;
+    // The file size in bytes after which the file will be temporarily stored on disk. The default size is 0 bytes.
     public static final int FILE_SIZE_THRESHOLD = 104857600;
     public static final int UPLOAD_BUFFER_SIZE = 4096;
     public static final int DOWNLOAD_BUFFER_SIZE = 8192;

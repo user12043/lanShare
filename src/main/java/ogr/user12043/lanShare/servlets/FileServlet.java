@@ -3,7 +3,6 @@ package ogr.user12043.lanShare.servlets;
 import ogr.user12043.lanShare.logging.Logger;
 import ogr.user12043.lanShare.util.Constants;
 import ogr.user12043.lanShare.util.Properties;
-import ogr.user12043.lanShare.util.Utils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -22,7 +21,11 @@ import java.nio.file.Paths;
  */
 
 @WebServlet(urlPatterns = "/file")
-@MultipartConfig(location = Constants.TEMPORARY_FILE_LOCATION, maxRequestSize = Constants.MAX_REQUEST_SIZE, maxFileSize = Constants.MAX_FILE_SIZE, fileSizeThreshold = Constants.FILE_SIZE_THRESHOLD)
+@MultipartConfig(
+        location = Constants.TEMPORARY_FILE_LOCATION,
+        maxRequestSize = Constants.MAX_REQUEST_SIZE,
+        maxFileSize = Constants.MAX_FILE_SIZE,
+        fileSizeThreshold = Constants.FILE_SIZE_THRESHOLD)
 public class FileServlet extends HttpServlet {
     private byte[] uploadBuffer;
     private byte[] downloadBuffer;
@@ -96,36 +99,12 @@ public class FileServlet extends HttpServlet {
             // Check file state
             if (!fileName.isEmpty() && file.exists() && !file.isDirectory()) {
                 Logger.info("Downloading file name: \"" + fileName + "\", Client address: \"" + request.getRemoteAddr() + "\", Client user: \"" + request.getRemoteUser() + "\"");
-                // Set header to tell browser a file is downloading
-                response.setContentType("application/octet-stream");
-
-                // Not setting file name directly because there is any special character in it maybe.
-                // Set encoding depending on the browser
-                boolean isIE = (request.getHeader("user-agent").contains("MSIE"));
-                String sendName = Utils.encodeFileName(fileName, isIE);
-                response.setHeader("content-disposition", "attachment; filename=\"" + sendName + "\"");
-
-                // Set content length. Browser will know file size.
-                response.setContentLengthLong(file.length());
-
-                OutputStream out = response.getOutputStream();
-                inputStream = new FileInputStream(file);
-
-                // Write the file to response output
-                while ((read = inputStream.read(downloadBuffer)) != -1) {
-                    out.write(downloadBuffer, 0, read);
-                }
-
-                inputStream.close();
-                out.flush();
+                MultipartFileSender.fromFile(file).with(request).with(response).serveResource();
             } else {
                 // Send not found error
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
-            if (inputStream != null) {
-                inputStream.close();
-            }
             String errorMessage = e.getMessage();
             Logger.error(errorMessage);
             // Send internal server error
